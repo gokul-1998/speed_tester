@@ -35,22 +35,47 @@ const useSpeedMeter = (config = {}) => {
     return mbps;
   };
 
-  // Simulate download by fetching data
+  // Simulate download by fetching data (like game network speed tests)
   const simulateDownload = async () => {
     try {
       const startTime = performance.now();
       
-      // Generate random data to simulate download
-      const randomData = new Uint8Array(packetSize);
-      crypto.getRandomValues(randomData);
+      // Simulate multiple chunks to get realistic throughput
+      // Games typically transfer multiple packets continuously
+      const numChunks = 10; // Transfer 10 chunks per measurement
+      const chunkSize = 65536; // Max 64KB per crypto call
+      let totalBytes = 0;
+      
+      for (let i = 0; i < numChunks; i++) {
+        const randomData = new Uint8Array(chunkSize);
+        crypto.getRandomValues(randomData);
+        
+        // Create a blob URL to simulate data transfer
+        const blob = new Blob([randomData]);
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // Simulate realistic network behavior per chunk
+        // Based on typical broadband speeds (50-200 Mbps download)
+        const networkLatency = 2 + Math.random() * 5; // 2-7ms latency per chunk
+        const baseSpeed = (50 + Math.random() * 150) * 1024 * 1024 / 8; // 50-200 Mbps in bytes/sec
+        const transferTime = (chunkSize / baseSpeed) * 1000; // Time to transfer at this speed
+        const chunkDelay = networkLatency + transferTime + (Math.random() * 3); // Add jitter
+        
+        await new Promise(resolve => setTimeout(resolve, chunkDelay));
+        
+        // Clean up the blob URL
+        URL.revokeObjectURL(blobUrl);
+        
+        totalBytes += chunkSize;
+      }
       
       const endTime = performance.now();
-      const duration = endTime - startTime;
       
-      // Add data point
+      // Add data point with actual bytes transferred
+      const duration = endTime - startTime;
       downloadDataRef.current.push({
         timestamp: endTime,
-        bytes: packetSize,
+        bytes: totalBytes,
         duration
       });
 
@@ -64,22 +89,47 @@ const useSpeedMeter = (config = {}) => {
     }
   };
 
-  // Simulate upload by creating data
+  // Simulate upload by creating data (like game network speed tests)
   const simulateUpload = async () => {
     try {
       const startTime = performance.now();
       
-      // Generate random data to simulate upload
-      const randomData = new Uint8Array(packetSize);
-      crypto.getRandomValues(randomData);
+      // Simulate multiple chunks to get realistic throughput
+      // Upload typically uses fewer/smaller packets than download
+      const numChunks = 8; // Transfer 8 chunks per measurement
+      const chunkSize = 65536; // Max 64KB per crypto call
+      let totalBytes = 0;
+      
+      for (let i = 0; i < numChunks; i++) {
+        const uploadData = new Uint8Array(chunkSize);
+        crypto.getRandomValues(uploadData);
+        
+        // Create a blob to simulate upload
+        const blob = new Blob([uploadData]);
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // Simulate realistic upload behavior per chunk
+        // Upload is typically slower than download (20-100 Mbps)
+        const networkLatency = 3 + Math.random() * 7; // 3-10ms latency per chunk
+        const baseSpeed = (20 + Math.random() * 80) * 1024 * 1024 / 8; // 20-100 Mbps in bytes/sec
+        const transferTime = (chunkSize / baseSpeed) * 1000; // Time to transfer at this speed
+        const chunkDelay = networkLatency + transferTime + (Math.random() * 4); // Add jitter
+        
+        await new Promise(resolve => setTimeout(resolve, chunkDelay));
+        
+        // Clean up the blob URL
+        URL.revokeObjectURL(blobUrl);
+        
+        totalBytes += chunkSize;
+      }
       
       const endTime = performance.now();
-      const duration = endTime - startTime;
       
       // Add data point
+      const duration = endTime - startTime;
       uploadDataRef.current.push({
         timestamp: endTime,
-        bytes: packetSize,
+        bytes: totalBytes,
         duration
       });
 
