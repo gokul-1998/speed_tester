@@ -1,0 +1,22 @@
+{
+  "name": "speed_tester",
+  "version": "1.0.0",
+  "description": "React Network Speed Meter - Real-time network speed measurement tool",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": ["network", "speed", "meter", "react", "real-time"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.4",
+    "vite": "^7.1.9"
+  }
+}
