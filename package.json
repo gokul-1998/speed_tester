@@ -1,12 +1,14 @@
 {
   "name": "speed_tester",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "React Network Speed Meter - Real-time network speed measurement tool",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
+  "keywords": ["network", "speed", "meter", "react", "real-time"],
   "author": "",
   "license": "ISC",
   "dependencies": {
